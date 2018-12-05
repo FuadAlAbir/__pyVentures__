@@ -67,10 +67,10 @@ while i <= end:
                     #print ("OOps: Something Else",err)
                     print 'ERROR 3'
                 l += 1
-            l = 0
+            l = start
             k += 1
-        k = 0
+        k = start
         j += 1
-    j = 0
+    j = start
     i += 1
 f.close()
