@@ -13,7 +13,7 @@ Problem Source: Wish to find ip servers of Ahsan.wifi
     I M P O R T E D   M O D U L E
 -------------------------------------
 Header: webbrowser
-Reason: to ooen a url in browser
+Reason: to open a url in browser
 Header: requests
 Reason: to process url's status
 
