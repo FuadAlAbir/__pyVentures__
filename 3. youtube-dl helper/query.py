@@ -7,7 +7,7 @@ from urllib.request import urlopen as uReq
 
 channel = sys.argv[1]
 query = sys.argv[2]
-output_dir = '/media/fuad/D U S T   B I N/_downloads/' + query + '-' + channel + '/%(title)s.%(ext)s'
+output_dir = '/media/fuad/FOOLISH/' + query + '-' + channel + '/%(title)s.%(ext)s'
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
@@ -26,5 +26,7 @@ for link in soup.findAll('a'):
         links.append(link)
 links = list(set(links))
 
-for link in links:
-    os.system('youtube-dl ' + link + ' --no-warnings -o ' + '"' + output_dir + '"')
+with open('temp.txt', 'w') as f:
+    f.write("%s\n" % output_dir)
+    for link in links:
+        f.write("%s\n" % link)
