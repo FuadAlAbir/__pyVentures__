@@ -1,5 +1,9 @@
 import os
 
+# option:
+#   start -s default:0
+#   end -s default:29
+
 with open('temp.txt') as f:
     links = f.read()
     links = list(links.split('\n'))

@@ -4,8 +4,10 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 import pyautogui
 
+from util import check, read_log, make_pdf
+
 class GVO:
-    def __init__(self, username, password, book_id, start, end):
+    def __init__(self, username, password, book_id, lst):
         chromedriver = '/usr/bin/chromedriver'
 
         self.driver = webdriver.Chrome(chromedriver)
@@ -22,7 +24,7 @@ class GVO:
         self.driver.find_element_by_xpath('//*[@id="passwordNext"]').click()
         sleep(3)
         
-        for i in range(start, end+1):
+        for i in lst:
             tab_url = 'https://drive.google.com/viewerng/img?id=' + book_id + '&authuser=0&page=' + str(i-1) + '&skiphighlight=true&w=800&webp=false'
             self.driver.get(tab_url)
             img = self.driver.find_element_by_xpath('/html/body/img')
@@ -41,15 +43,36 @@ class GVO:
         sleep(10)
         self.driver.close()
 
+txt = read_log()
 
+mail = txt[0]
+password = txt[1]
+book_name = txt[2]
+book_id = txt[3]
+start = int(txt[4])
+end = int(txt[5])
+dl_flag= int(txt[6])
+check_flag = int(txt[7])
+pdf_flag = int(txt[8])
 
-# parameters
+lst = [i for i in range(start, end+1)]
 
-mail = 'YOUR GMAIL ADDRESS'
-password = 'GMAIL PASSWORD'
-book_id = 'BOOK_ID'
-start = 1   # range: start to end, inclusive
-end = 100
+# download: take 1
+if(dl_flag == 1):
+    print('Downloading ' + book_name + ':' , str(lst[0]), 'to',         str(lst[-1]))
+    GVO(mail, password, book_id, lst)   
 
-dl = GVO(mail, password, book_id, start, end)
- 
+# checking for error, redownloading
+if(check_flag == 1):
+    while(True):
+        lst = check(end)
+        if(len(lst) > 0):
+            print('Redownloading:', lst)
+            GVO(mail, password, book_id, lst)
+        else:
+            print(book_name + ': All Images Downloaded Successfully.')
+            break
+
+# convering all png to pdf
+if(pdf_flag == 1):
+    make_pdf(end, book_name)
