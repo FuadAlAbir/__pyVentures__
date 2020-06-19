@@ -32,6 +32,16 @@ def get_points(model_output):
 
   return _points
 
+def get_confidence_score(model_output):
+  '''returns 17 keypoints' confidence score'''
+  score_ar = model_output['instances'].pred_keypoints[0].cpu().detach().numpy()
+
+  _score = []
+  for i in range(17):
+    _score.append(np.array(score_ar[i][2]))
+
+  return _score
+
 def get_points_extended(_points, _bbox):
   '''returns extended 34 points'''
   p0 = np.array(get_middle(_points[5], _points[6]))     # 17 :: shoulder mid
