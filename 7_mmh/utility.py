@@ -22,6 +22,24 @@ warnings.filterwarnings("ignore")
 #                           Utility :: Output
 #====================================================================
 
+def get_confidence_score(model_output):
+  '''returns 17 keypoints' confidence score'''
+  score_ar = model_output['instances'].pred_keypoints[0].cpu().detach().numpy()
+
+  _score = []
+  for i in range(17):
+    _score.append(score_ar[i][2])
+
+  return _score
+
+def is_points_confident(score, points_involved, threshold):
+  flag = True
+  for p in points_involved:
+    if score[p] < threshold:
+      flag = False
+      break
+  return flag
+
 def get_points(model_output):
   '''returns 17 keypoints'''
   pts_ar = model_output['instances'].pred_keypoints[0].cpu().detach().numpy()
@@ -31,16 +49,6 @@ def get_points(model_output):
     _points.append(np.array([pts_ar[i][0], pts_ar[i][1]]))
 
   return _points
-
-def get_confidence_score(model_output):
-  '''returns 17 keypoints' confidence score'''
-  score_ar = model_output['instances'].pred_keypoints[0].cpu().detach().numpy()
-
-  _score = []
-  for i in range(17):
-    _score.append(np.array(score_ar[i][2]))
-
-  return _score
 
 def get_points_extended(_points, _bbox):
   '''returns extended 34 points'''
@@ -60,10 +68,6 @@ def get_points_extended(_points, _bbox):
   dist_46 = point_distance(_points[4], _points[6])
   p5 = np.array((_points[5][0], _points[5][1] - dist_35), dtype='float32') # 22 :: used in 4ab
   p6 = np.array((_points[6][0], _points[6][1] - dist_35), dtype='float32') # 23 :: used in 4ab
-  
-  # Ex.8ab
-  # dist_0_17 = point_distance(_points[3], p0)          # alternate :: 20
-  # px = np.array(p0[0], p0[1] - dist_0_17)             # used in 8ab
   
   # Ex.12, 13
   dist_57 = point_distance(_points[5], _points[7])
@@ -100,9 +104,18 @@ def get_points_calibrated(_points_ex, adjust, proportion):
   c1_x = _points_ex[17][0]
   c1_y = _points_ex[0][1]
   c1 = np.array((c1_x, c1_y), dtype='float32')                              # 35 :: mid shoulder, by nose
+  
+  # Ex. 29, 31, 33
+  c2_x = _points_ex[9][0]
+  c2_y = _points_ex[33][1]
+  c2 = np.array((c2_x, c2_y), dtype='float32')                              # 35 :: mid shoulder, by nose
+
+  c3_x = _points_ex[10][0]
+  c3_y = _points_ex[33][1]
+  c3 = np.array((c3_x, c3_y), dtype='float32')                              # 35 :: mid shoulder, by nose
 
   _points_cal = _points_ex.copy()
-  _points_cal.extend([c0, c1])
+  _points_cal.extend([c0, c1, c2, c3])
   
   return _points_cal
 
