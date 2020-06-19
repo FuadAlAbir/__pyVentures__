@@ -81,13 +81,18 @@ def get_points_extended(_points, _bbox):
   return _points_ex
 
 def get_points_calibrated(_points_ex, adjust, proportion):
-  # Ex.8ab
+  # Ex. 8ab
   c0_x = _points_ex[17][0]
   c0_y = _points_ex[17][1] - adjust / proportion
   c0 = np.array((c0_x, c0_y), dtype='float32')                              # 34 :: mid shoulder, y adjust
   
+  # Ex. 5ab, 6ab
+  c1_x = _points_ex[0][0]
+  c1_y = _points_ex[17][1]
+  c1 = np.array((c1_x, c1_y), dtype='float32')                              # 35 :: mid shoulder, by nose
+
   _points_cal = _points_ex.copy()
-  _points_cal.extend([c0])
+  _points_cal.extend([c0, c1])
   
   return _points_cal
 
@@ -191,7 +196,7 @@ def avg(a, b):
 #                  Utility :: Body Parts Measurement
 #====================================================================
 
-def estimate_measurements(model_output, height):
+def estimate_measurements(model_output, height=160.02, adjust=0.0):
   '''estimate body parts measurement from model_output and subject height'''
   _points = get_points(model_output)
   
