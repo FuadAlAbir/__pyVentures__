@@ -87,8 +87,8 @@ def get_points_calibrated(_points_ex, adjust, proportion):
   c0 = np.array((c0_x, c0_y), dtype='float32')                              # 34 :: mid shoulder, y adjust
   
   # Ex. 5ab, 6ab
-  c1_x = _points_ex[0][0]
-  c1_y = _points_ex[17][1]
+  c1_x = _points_ex[17][0]
+  c1_y = _points_ex[0][1]
   c1 = np.array((c1_x, c1_y), dtype='float32')                              # 35 :: mid shoulder, by nose
 
   _points_cal = _points_ex.copy()
